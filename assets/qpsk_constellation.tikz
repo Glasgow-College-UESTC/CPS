@@ -1,0 +1,54 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}[scale=3, >=latex]
+
+    % --- Grid and Axes ---
+    \draw[gray!20, step=0.5] (-1.4,-1.4) grid (1.4,1.4);
+    \draw[->, thick] (-1.5,0) -- (1.5,0) node[right] {In-Phase ($I$)};
+    \draw[->, thick] (0,-1.5) -- (0,1.5) node[above] {Quadrature ($Q$)};
+
+    % --- Circle (Constant Energy) ---
+    \draw[dashed, gray] (0,0) circle (1);
+    \node[gray, anchor=south west] at (0.60, 0.82) {$\sqrt{E}$};
+
+    % --- Constellation Points ---
+    % Mapping based on slides: 10, 00, 01, 11
+    
+    % Point 1: 45 degrees (10)
+    \coordinate (P1) at (45:1);
+    \filldraw[blue] (P1) circle (0.04);
+    \node[blue, above right] at (P1) {\textbf{10}};
+    \node[blue, font=\tiny] at (0.8, 0.6) {$\frac{\pi}{4}$};
+
+    % Point 2: 135 degrees (00)
+    \coordinate (P2) at (135:1);
+    \filldraw[blue] (P2) circle (0.04);
+    \node[blue, above left] at (P2) {\textbf{00}};
+    \node[blue, font=\tiny] at (-0.8, 0.6) {$\frac{3\pi}{4}$};
+
+    % Point 3: 225 degrees (01)
+    \coordinate (P3) at (225:1);
+    \filldraw[blue] (P3) circle (0.04);
+    \node[blue, below left] at (P3) {\textbf{01}};
+    \node[blue, font=\tiny] at (-0.8, -0.6) {$\frac{5\pi}{4}$};
+
+    % Point 4: 315 degrees (11)
+    \coordinate (P4) at (315:1);
+    \filldraw[blue] (P4) circle (0.04);
+    \node[blue, below right] at (P4) {\textbf{11}};
+    \node[blue, font=\tiny] at (0.8, -0.6) {$\frac{7\pi}{4}$};
+
+    % --- Basis Vectors (Optional Visual Aid) ---
+    \draw[->, red, thick] (0,0) -- (1,0) node[midway, below] {$\phi_1$};
+    \draw[->, red, thick] (0,0) -- (0,1) node[midway, left] {$\phi_2$};
+
+    % --- Gray Code Arrows (showing 1 bit change) ---
+    \draw[->, gray, dashed, bend left] (P1) to node[auto, font=\tiny] {1 bit} (P2);
+    \draw[->, gray, dashed, bend left] (P2) to node[auto, font=\tiny] {1 bit} (P3);
+    \draw[->, gray, dashed, bend left] (P3) to node[auto, font=\tiny] {1 bit} (P4);
+    \draw[->, gray, dashed, bend left] (P4) to node[auto, font=\tiny] {1 bit} (P1);
+
+\end{tikzpicture}
+\end{document}

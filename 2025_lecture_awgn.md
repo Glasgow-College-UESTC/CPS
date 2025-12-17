@@ -1,7 +1,7 @@
 ---
 marp: false
 title: UESTC 3018 - Lecture 19
-description: Digital Modulation in AWGN (Detailed)
+description: Digital Modulation (BASK, BFSK, BPSK, QPSK, M-ary)
 theme: uncovered
 paginate: true
 math: katex
@@ -30,6 +30,7 @@ style: |
   }
   h1 { color: #093867; }
   h2 { color: #005f86; }
+  table { width: 100%; }
 _backgroundColor: "#FFFCEE"
 _color: "#093867"
 ---
@@ -40,265 +41,255 @@ _color: "#093867"
 
 # UESTC 3018 - Communication Systems
 
-Lecture 19 — Digital Modulation in AWGN Channels
-*Bridging the Gap: From Baseband to Passband*
+Lecture 19 — Digital Modulation: From Binary to M-ary
+*Signal Space, Constellations, and Bandwidth*
 
 Dr Hasan Abbas
 [Hasan.abbas@glasgow.ac.uk](Hasan.Abbas@glasgow.ac.uk)
 
 ---
 
-# The "Missing Link": Baseband vs. Passband
+# Today's Roadmap 🗺️
 
-**Lecture 18 (Baseband):**
-- Signal sits near DC ($0$ Hz).
-- $m(t)$ is a pulse stream (Rect, Sinc).
-- **Limit:** Cannot propagate through free space (Antenna $\propto \lambda$).
-
-**Lecture 19 (Passband):**
-- Signal is shifted to carrier frequency $f_c$.
-- **Mechanism:** Multiplication by a sinusoid.
-- **Result:** $s(t) = m(t) \cdot \cos(2\pi f_c t)$.
-
-
+1.  **The Modulation Concept:** Moving to Passband.
+2.  **Geometric View:** Signal Space & Basis Functions ($I/Q$).
+3.  **Binary Modulation:**
+    - Amplitude (BASK)
+    - Frequency (BFSK)
+    - Phase (BPSK)
+4.  **Quadrature Modulation:** QPSK.
+5.  **M-ary Schemes:** 16-QAM and Spectral Efficiency.
 
 ---
 
-# The Modulation Theorem (The Maths)
+# Part 1: The Modulation Concept
 
-How do we move frequency? The Fourier Transform property:
+**Baseband (Lecture 18):**
+Signal $m(t)$ is at low frequencies (near DC).
+*Problem:* Requires huge antennas ($\lambda/4 \approx 25$ km for voice).
 
-$$m(t) \cos(2\pi f_c t) \iff \frac{1}{2} [M(f - f_c) + M(f + f_c)]$$
+**Passband (Lecture 19):**
+We shift the signal to a Carrier Frequency $f_c$.
 
-<div class="math-block">
+$$s(t) = A(t) \cos(2\pi f_c t + \phi(t))$$
 
-1.  **Baseband $M(f)$:** Centered at 0 Hz.
-2.  **Multiply by $\cos$:** Spectrum splits and shifts to $\pm f_c$.
-3.  **Result:** We can now transmit voice ($4$ kHz) over Wi-Fi ($2.4$ GHz).
-
-</div>
-
-**Bandwidth Implication:**
-Passband transmission usually requires **Double the Bandwidth** of Baseband ($B_{pass} = 2B_{base}$) because of the two sidebands.
-
----
-
-# System Model: The "Big Picture"
-
-(Ref: Lecture 18 Notes, Slide 3)
-
-$$\text{Source} \to \text{Encoder} \to \boxed{\text{Modulator}} \to \text{Channel} \to \boxed{\text{Demodulator}} \to \text{Sink}$$
-
-**The Channel (AWGN):**
-- The signal is corrupted by **Additive White Gaussian Noise**.
-- $r(t) = s_i(t) + n(t)$
-- **Goal:** The Demodulator must calculate which $s_i(t)$ was most likely sent, minimizing the Probability of Error ($P_e$).
+We can vary:
+1.  **Amplitude** ($A$) $\to$ ASK
+2.  **Frequency** ($f$) $\to$ FSK
+3.  **Phase** ($\phi$) $\to$ PSK
 
 ---
 
 # Geometric Representation (Signal Space)
 
-To solve the detection problem, we stop thinking in "Time" and start thinking in "Vectors".
+To understand modern comms, we don't draw waves; we draw **Vectors**.
 
-**Gram-Schmidt Orthogonalization:**
-Any set of $M$ signals can be represented as a linear combination of $N$ orthonormal basis functions $\{\phi_j(t)\}$.
-
-$$s_i(t) = \sum_{j=1}^{N} s_{ij} \phi_j(t)$$
-
-- **Vector:** $\mathbf{s}_i = [s_{i1}, s_{i2}]$ (Coordinates in space).
-- **Energy:** $E_i = ||\mathbf{s}_i||^2$.
-
----
-
-# The Basis Functions ($I$ and $Q$)
-
-For most digital modulation, $N=2$. We define an Orthogonal Basis:
+We define two **Basis Functions** (Axes) that are Orthogonal:
 
 <div class="columns">
 <div>
 
-**1. In-Phase ($\phi_1$):**
+**1. In-Phase ($I$):**
 $$\phi_1(t) = \sqrt{\frac{2}{T}} \cos(2\pi f_c t)$$
 
-**2. Quadrature ($\phi_2$):**
+**2. Quadrature ($Q$):**
 $$\phi_2(t) = \sqrt{\frac{2}{T}} \sin(2\pi f_c t)$$
 
 </div>
 <div>
 
+**The Vector:**
+Any signal $s_i(t)$ is a point:
+$$\mathbf{s}_i = [s_{i1}, s_{i2}]$$
+
+**Energy:**
+Distance from origin squared.
+$$E = ||\mathbf{s}_i||^2$$
+
+</div>
+</div>
+
+---
+
+# Part 2: Binary Digital Modulation ($M=2$)
+
+We transmit **1 bit per symbol**.
+We need 2 distinct signals: $s_1(t)$ and $s_2(t)$.
+
+### 1. Binary Amplitude Shift Keying (BASK)
+"On-Off Keying"
+
+- **Bit 1:** Send Carrier ($\sqrt{E_b}$).
+- **Bit 0:** Send Nothing ($0$).
+
+**Constellation:**
+- Points at $[0]$ and $[\sqrt{E}]$.
+- **Pros:** Simple (Light bulb on/off).
+- **Cons:** Susceptible to noise (Amplitude varies naturally).
+
+---
+
+# 2. Binary Frequency Shift Keying (BFSK)
+
+We use frequency to distinguish bits.
+
+- **Bit 1:** Send $f_1 = f_c + \Delta f$.
+- **Bit 0:** Send $f_2 = f_c - \Delta f$.
+
 **Orthogonality Condition:**
-$$\int_0^T \phi_1(t) \phi_2(t) dt = 0$$
+To detect these independently, the frequencies must be spaced by $\Delta f = \frac{1}{2T_b}$.
 
-*This ensures the I and Q channels do not interfere with each other.*
-
-</div>
-</div>
-
----
-
-# 1. Binary Phase Shift Keying (BPSK)
-
-We map 1 bit $\to$ 2 symbols.
-The carrier phase is shifted by $180^\circ$ (antipodal).
-
-**Signal Definition:**
-$$s_1(t) = \sqrt{\frac{2E_b}{T_b}} \cos(2\pi f_c t) \quad (\text{Logic 1})$$
-$$s_2(t) = -\sqrt{\frac{2E_b}{T_b}} \cos(2\pi f_c t) \quad (\text{Logic 0})$$
-
-**Vector Coordinates:**
-- $s_1 = [+\sqrt{E_b}, 0]$
-- $s_2 = [-\sqrt{E_b}, 0]$
+**Constellation:**
+- Vectors are orthogonal (90 degrees apart).
+- Points at $[1, 0]$ and $[0, 1]$ in frequency space.
+- **Cons:** Uses **more Bandwidth** than ASK/PSK.
 
 ---
 
-# BPSK Performance
+# 3. Binary Phase Shift Keying (BPSK)
 
-<div class="columns">
-<div>
+The most robust binary scheme. We flip the phase by $180^\circ$.
 
+$$s(t) = \pm A \cos(2\pi f_c t)$$
 
+**Constellation:**
 
-**Decision Boundary:**
-- The vertical axis ($I=0$).
-- If received $r > 0$, decide "1".
-- If received $r < 0$, decide "0".
+- Points at $+\sqrt{E_b}$ and $-\sqrt{E_b}$ on the I-axis.
+- **Antipodal:** Max separation distance $d = 2\sqrt{E_b}$.
+- **Q-Component:** Zero.
 
-</div>
-<div>
-
-**Probability of Error ($P_e$):**
-Depends on the Euclidean distance $d_{12} = 2\sqrt{E_b}$.
-
-$$P_e = Q\left( \sqrt{\frac{2E_b}{N_0}} \right)$$
-
-*Note: BPSK is the most robust PSK modulation.*
-
-</div>
-</div>
+**Bandwidth Efficiency:** 1 bit / Hz.
 
 ---
 
-# 2. Quadrature PSK (QPSK)
+# Part 3: Quadrature Modulation (QPSK)
 
-To increase efficiency, we use **both** basis functions ($\phi_1$ and $\phi_2$).
+**The Engineering Breakthrough:**
+Since $\cos(t)$ and $\sin(t)$ are orthogonal, we can transmit two separate BPSK signals on the same frequency **simultaneously**.
 
-**Signal Definition:**
-$$s_i(t) = \sqrt{E} \cos(2\pi f_c t + \theta_i), \quad \theta_i \in \{ \frac{\pi}{4}, \frac{3\pi}{4}, \frac{5\pi}{4}, \frac{7\pi}{4} \}$$
+**Quadrature PSK:**
+- **I-Channel:** Carries Bit 1 ($\cos$).
+- **Q-Channel:** Carries Bit 2 ($\sin$).
 
-**Trigonometric Expansion (The Hardware View):**
-$$s_i(t) = \underbrace{a_I \cos(2\pi f_c t)}_{\text{I-Channel}} - \underbrace{a_Q \sin(2\pi f_c t)}_{\text{Q-Channel}}$$
-
-We transmit **2 bits** simultaneously: one on Cosine, one on Sine.
+**Result:**
+We send **2 bits per symbol**.
 
 ---
 
-# QPSK Constellation & Bandwidth
+# QPSK Signal Space
 
 <div class="columns">
 <div>
 
 **Constellation:**
-- 4 points at $(\pm \sqrt{E/2}, \pm \sqrt{E/2})$.
-- **Gray Coding:** Adjacent points differ by only 1 bit.
+- 4 Points.
+- Phases: $45^\circ, 135^\circ, 225^\circ, 315^\circ$.
+- Energy $E_s = 2E_b$.
 
-**Spectral Efficiency:**
-- QPSK sends 2 bits/symbol.
-- It uses the **same bandwidth** as BPSK.
-- **Result:** Double the Data Rate for free.
+**Gray Coding:**
+00, 01, 11, 10
+(Adjacent points differ by only 1 bit).
 
 </div>
 <div>
 
-
+![h:350 center](assets/qpsk_constellation.svg)
 
 </div>
 </div>
 
 ---
 
-# 3. M-ary QAM (Quadrature Amplitude Modulation)
+# Comparison: BPSK vs QPSK
 
-Phase modulation has limits. To go faster, we vary **Amplitude** too.
+This is the most critical comparison in digital comms.
 
-**Signal Definition:**
-$$s_i(t) = a_i \phi_1(t) + b_i \phi_2(t)$$
-where $a_i, b_i$ are amplitude levels (e.g., $\pm 1, \pm 3$).
+| Metric                     | BPSK  |   QPSK    |
+| :------------------------- | :---: | :-------: |
+| Bits per Symbol            |   1   |     2     |
+| Data Rate (for fixed BW)   |  $R$  | **$2R$**  |
+| Bandwidth (for fixed Rate) |  $B$  | **$B/2$** |
+| Error Performance (BER)    | Same  |   Same    |
 
-**16-QAM:**
-- 4 levels on I-axis, 4 levels on Q-axis.
-- $4 \times 4 = 16$ symbols.
-- **4 bits per symbol.**
-
----
-
-# The Power/Bandwidth Trade-off
-
-As $M$ increases (16-QAM $\to$ 64-QAM):
-
-1.  **Bandwidth Efficiency ($\eta$) Increases:**
-    We send more bits per Hertz. $\eta = \log_2 M$.
-2.  **Noise Immunity Decreases:**
-    Points are packed tighter together.
-3.  **Power Requirement Increases:**
-    To maintain the same Error Rate, we must increase Transmit Power to push the points apart.
-
-> **Engineering Choice:** High SNR channel? Use 64-QAM. Noisy channel? Use BPSK.
+> **Takeaway:** QPSK doubles the efficiency of BPSK without penalizing error rate or bandwidth. It is the "sweet spot."
 
 ---
 
-# <span style="color:white">Part 3: Handling Wideband Channels (OFDM)</span>
+# Part 4: M-ary Modulation ($M > 4$)
 
-![bg opacity:100%](assets/gradient3.png)
+We can group $k$ bits into a symbol ($M = 2^k$).
 
----
+**Generalizing the I/Q Modulator:**
+$$s(t) = I \cdot \cos(2\pi f_c t) - Q \cdot \sin(2\pi f_c t)$$
 
-# The Limitation of Single-Carrier
+Instead of just $\pm 1$, let $I$ and $Q$ take multiple levels (e.g., $\pm 1, \pm 3$).
 
-So far, we assumed a simple channel.
-**Reality:** High-speed channels have **Multipath Fading**.
-
-- **Delay Spread:** Reflections arrive at different times.
-- **Result:** Inter-Symbol Interference (ISI).
-- If Symbol Time $T_s < \text{Delay Spread}$, the symbols crash into each other.
-
-**Traditional Fix:** Complex Equalizers (Hard to build for high speeds).
+This creates a **Grid** of points called **QAM** (Quadrature Amplitude Modulation).
 
 ---
 
-# The Solution: OFDM
+# 16-QAM Constellation
 
-**Orthogonal Frequency Division Multiplexing**
+- **$M=16$ symbols.**
+- **$k=4$ bits per symbol.**
 
-Instead of sending 1 stream at 100 Mbps (Short $T_s$), we send **100 streams** at 1 Mbps (Long $T_s$).
+<div class="columns">
+<div>
 
-**Key Mechanism:**
-1.  **Serial-to-Parallel:** Split bits into $N$ sub-streams.
-2.  **IFFT:** Modulate them onto $N$ orthogonal sub-carriers.
-3.  **Result:** Each sub-channel is "narrowband" and flat. ISI is negligible.
+**Structure:**
+- 4 levels for I.
+- 4 levels for Q.
+- Square Grid.
+
+**Efficiency:**
+- 4 bits/sec per Hz.
+- 4x faster than BPSK.
+
+</div>
+<div>
+
+![h:350 center](assets/qam_constellation.svg)
+
+</div>
+</div>
+
+---
+
+# The Cost of M-ary Modulation
+
+There is no free lunch after QPSK.
+
+**1. Noise Susceptibility:**
+As $M$ increases (16 $\to$ 64 $\to$ 256), points get packed closer together.
+$\implies$ We need higher **SNR** (Transmit Power) to keep errors low.
+
+**2. Complexity:**
+Receiver needs precise amplitude and phase tracking.
 
 
 
 ---
 
-# Comparison: Single vs Multi-Carrier
+# Spectral Efficiency Summary
 
-| Feature | Single Carrier (QAM) | Multi-Carrier (OFDM) |
-| :--- | :--- | :--- |
-| **Symbol Duration** | Very Short (High ISI) | Long (Low ISI) |
-| **Equalization** | Complex Time-Domain EQ | Simple 1-tap Freq EQ |
-| **Fading** | Whole signal fades | Only some sub-carriers fade |
-| **Hardware** | Linear Amplifier needed | FFT/IFFT needed |
+How many bits can we squeeze into 1 Hz of Bandwidth?
 
-*OFDM is the engine behind 4G, 5G, and Wi-Fi.*
+| Modulation  | Efficiency ($\eta$) | Application                  |
+| :---------- | :-----------------: | :--------------------------- |
+| **BPSK**    |     1 bit/s/Hz      | GPS, Deep Space (Robust)     |
+| **QPSK**    |     2 bits/s/Hz     | Satellite TV, 3G             |
+| **16-QAM**  |     4 bits/s/Hz     | Wi-Fi (g/n), 4G LTE          |
+| **64-QAM**  |     6 bits/s/Hz     | Wi-Fi (ac), 5G (Good signal) |
+| **256-QAM** |     8 bits/s/Hz     | 5G (Close to tower)          |
 
 ---
 
 # Summary
 
-1.  **Modulation:** Frequency shifting via $m(t) \cdot \cos(\omega_c t)$ allows wireless transmission.
-2.  **Signal Space:** We use **I/Q vectors** to analyze performance. Distance = Robustness.
-3.  **QPSK:** The "sweet spot" of modulation (2x rate of BPSK with same bandwidth).
-4.  **OFDM:** The modern solution for high-speed data, replacing complex equalizers with parallel sub-carriers (IFFT).
+1.  **Signal Space:** We map waveforms to vectors $(I, Q)$. Euclidean distance determines performance.
+2.  **Binary (BPSK):** Robust, simple, 1 bit/sym.
+3.  **Quadrature (QPSK):** Uses Orthogonality to double the data rate (2 bits/sym) in the same bandwidth.
+4.  **M-ary (QAM):** Increases rate further ($\log_2 M$ bits/sym) but requires much higher **Power/SNR**.
 
 ---
 
@@ -309,11 +300,10 @@ Instead of sending 1 stream at 100 Mbps (Short $T_s$), we send **100 streams** a
 
 # Further Reading
 
-- **Lecture 18 Notes (Afsaneh)**: Focus on Slides 6-25.
+- **Afsaneh's Lecture Notes:** Focus on the QPSK and QAM derivation.
 - **Lathi Chapter 6:**
-  - 6.2 (Signal Space)
-  - 6.6 (QAM)
-  - 6.8 (OFDM)
+  - 6.4 (Bandpass Modulation)
+  - 6.7 (M-ary Modulation)
 
 ---
 

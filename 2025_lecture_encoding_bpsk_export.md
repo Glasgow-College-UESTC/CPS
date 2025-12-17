@@ -108,6 +108,71 @@ Dr Hasan Abbas
 
 ---
 
+# The Bandwidth of Line Codes
+
+To understand bandwidth, we look at the <span style="color:green">**Power Spectral Density (PSD)**</span>. This depends on two things:
+
+1. The Shape of the Pulse ($P(f)$):
+- A sharp square pulse has a wide frequency spread.
+2. The Pattern of the Bits ($R_k$):
+-  Do 1s and 0s follow a pattern, or are they random?
+
+$$
+S(f) = \underbrace{\frac{1}{T_b} |P(f)|^2}_{\text{Shape}} \times \underbrace{\sum R_k e^{-j\dots}}_{\text{Pattern}}
+$$
+
+---
+
+# For Random Data ...
+
+In real data (compressed audio/video), bits are <span style="color:green">random</span> (like coin flips).
+
+1. No Patterns ($R_k = 0$):
+- Knowing bit $N$ tells us nothing about bit $N+1$.
+- Because there is no pattern, the complex sum $\sum (\dots)$ vanishes!
+
+1. Average Power ($\sigma^2 \to A^2$):
+- For a signal swinging between $+A$ and $-A$, the "Variance" is just the amplitude squared.
+- Variance = Power = $A^2$.
+
+---
+
+# Derivation: NRZ Bandwidth
+
+For NRZ, we use a rectangular pulse.
+- Pulse Shape: $P(f) = T_b \text{sinc}(f T_b)$
+- Pattern: Random ($R_k=0$, sum disappears).
+
+The PSD becomes just the Pulse Shape squared $\times$ Power:
+
+$$S_{NRZ}(f) = A^2 T_b \text{sinc}^2(f T_b)$$
+
+### Observation
+- The first null is at $f = R_b$.
+- Most power is packed in the low frequencies (Baseband).
+
+![bg right:40% 90%](assets/psd_nrz.svg)
+
+
+---
+
+# Manchester Bandwidth
+
+Manchester uses a "split" pulse ($+V$ then $-V$).
+$$P(f) = T_b \text{sinc}\left(\frac{f T_b}{2}\right) \sin\left(\frac{\pi f T_b}{2}\right)$$
+
+$$S_{Manc}(f) = A^2 T_b \text{sinc}^2\left(\frac{f T_b}{2}\right) \sin^2\left(\frac{\pi f T_b}{2}\right)$$
+
+### Observation
+1. $\sin(0) = 0 \to$ **Zero DC**.
+2. The null is pushed to $f = 2/T_b = 2R_b$.
+3. Manchester requires **2x Bandwidth**.
+
+
+![bg right:40% 90%](assets/manchester_psd.svg)
+
+---
+
 # Pulse Code Modulation (PCM)
 
 PCM is the standard for uncompressed digital audio (CDs etc).

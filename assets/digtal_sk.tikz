@@ -1,0 +1,81 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}[xscale=1.5, >=latex, thick]
+
+    % Define bit width and pattern: 1 0 1 1 0
+    % Bit period T = 1 unit
+    
+    % --- 1. Binary Data (Message) ---
+    \node[anchor=east] at (-0.2, 5.5) {\textbf{Binary Data}};
+    \draw[->] (0,5) -- (5.5,5) node[right] {$t$};
+    \draw[blue, very thick] 
+        (0,5) -- (0,6) -- (1,6)   % Bit 1
+        -- (1,5) -- (2,5)         % Bit 0
+        -- (2,6) -- (3,6)         % Bit 1
+        -- (3,6) -- (4,6)         % Bit 1
+        -- (4,5) -- (5,5);        % Bit 0
+    
+    % Bit Labels
+    \node at (0.5, 6.3) {1};
+    \node at (1.5, 6.3) {0};
+    \node at (2.5, 6.3) {1};
+    \node at (3.5, 6.3) {1};
+    \node at (4.5, 6.3) {0};
+
+    % Grid lines (Bit Boundaries)
+    \foreach \x in {1,2,3,4,5}
+        \draw[gray!50, dashed, thin] (\x, 6.5) -- (\x, -1.5);
+
+    % --- 2. BASK (Amplitude Shift Keying) ---
+    \node[anchor=east] at (-0.2, 3.5) {\textbf{BASK}};
+    \draw[->] (0,3.5) -- (5.5,3.5) node[right] {$t$};
+    
+    % Bit 1: Sine wave (High Amp)
+    \draw[red, smooth, samples=50, domain=0:1] plot (\x, {3.5 + 0.4*sin(360*3*\x)});
+    % Bit 0: Flat line (Zero Amp)
+    \draw[red, smooth] (1,3.5) -- (2,3.5);
+    % Bit 1: Sine wave
+    \draw[red, smooth, samples=50, domain=2:3] plot (\x, {3.5 + 0.4*sin(360*3*\x)});
+    % Bit 1: Sine wave
+    \draw[red, smooth, samples=50, domain=3:4] plot (\x, {3.5 + 0.4*sin(360*3*\x)});
+    % Bit 0: Flat line
+    \draw[red, smooth] (4,3.5) -- (5,3.5);
+
+    % --- 3. BFSK (Frequency Shift Keying) ---
+    \node[anchor=east] at (-0.2, 1.5) {\textbf{BFSK}};
+    \draw[->] (0,1.5) -- (5.5,1.5) node[right] {$t$};
+    
+    % Bit 1: High Freq (e.g., f1)
+    \draw[orange, smooth, samples=100, domain=0:1] plot (\x, {1.5 + 0.4*sin(360*6*\x)});
+    % Bit 0: Low Freq (e.g., f2)
+    \draw[orange, smooth, samples=50, domain=1:2] plot (\x, {1.5 + 0.4*sin(360*3*\x)});
+    % Bit 1: High Freq
+    \draw[orange, smooth, samples=100, domain=2:3] plot (\x, {1.5 + 0.4*sin(360*6*\x)});
+    % Bit 1: High Freq
+    \draw[orange, smooth, samples=100, domain=3:4] plot (\x, {1.5 + 0.4*sin(360*6*\x)});
+    % Bit 0: Low Freq
+    \draw[orange, smooth, samples=50, domain=4:5] plot (\x, {1.5 + 0.4*sin(360*3*\x)});
+
+    % --- 4. BPSK (Phase Shift Keying) ---
+    \node[anchor=east] at (-0.2, -0.5) {\textbf{BPSK}};
+    \draw[->] (0,-0.5) -- (5.5,-0.5) node[right] {$t$};
+    
+    % Bit 1: Phase 0 (Normal Sine)
+    \draw[cyan, smooth, samples=50, domain=0:1] plot (\x, {-0.5 + 0.4*sin(360*3*\x)});
+    % Bit 0: Phase 180 (Inverted Sine)
+    \draw[cyan, smooth, samples=50, domain=1:2] plot (\x, {-0.5 - 0.4*sin(360*3*\x)});
+    % Bit 1: Phase 0
+    \draw[cyan, smooth, samples=50, domain=2:3] plot (\x, {-0.5 + 0.4*sin(360*3*\x)});
+    % Bit 1: Phase 0
+    \draw[cyan, smooth, samples=50, domain=3:4] plot (\x, {-0.5 + 0.4*sin(360*3*\x)});
+    % Bit 0: Phase 180
+    \draw[cyan, smooth, samples=50, domain=4:5] plot (\x, {-0.5 - 0.4*sin(360*3*\x)});
+
+    % Annotate the Phase Flip in BPSK
+    \draw[<-, black, thin] (1, -0.2) -- (1.2, 0.2) node[right, font=\tiny] {Phase Flip};
+    \draw[<-, black, thin] (2, -0.2) -- (2.2, 0.2) node[right, font=\tiny] {Phase Flip};
+
+\end{tikzpicture}
+\end{document}

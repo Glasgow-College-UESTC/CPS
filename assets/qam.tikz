@@ -1,0 +1,47 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{tikz}
+
+\begin{document}
+\begin{tikzpicture}[scale=2.5, >=latex]
+
+    % --- LEFT: 8-PSK ---
+    \begin{scope}[xshift=-1.5cm]
+        \node at (0, 1.6) {\textbf{8-PSK (M=8)}};
+        \draw[gray!20] (-1.2,-1.2) grid (1.2,1.2);
+        \draw[->, thick] (-1.3,0) -- (1.3,0) node[right] {$I$};
+        \draw[->, thick] (0,-1.3) -- (0,1.3) node[above] {$Q$};
+        
+        \draw[dashed, gray] (0,0) circle (1);
+        
+        % 8 Points spaced by 45 degrees
+        \foreach \angle in {0, 45, ..., 315} {
+            \filldraw[blue] (\angle:1) circle (0.04);
+            \draw[gray, dotted] (0,0) -- (\angle:1);
+        }
+        
+        % Annotate phase difference
+        \draw[->, red] (0.3,0) arc (0:45:0.3);
+        \node[red, right] at (0.3, 0.2) {$45^\circ$};
+    \end{scope}
+
+    % --- RIGHT: 16-QAM ---
+    \begin{scope}[xshift=2.5cm]
+        \node at (0, 1.6) {\textbf{16-QAM (M=16)}};
+        \draw[gray!20] (-1.2,-1.2) grid (1.2,1.2);
+        \draw[->, thick] (-1.3,0) -- (1.3,0) node[right] {$I$};
+        \draw[->, thick] (0,-1.3) -- (0,1.3) node[above] {$Q$};
+        
+        % 16 Points in a 4x4 Grid
+        % Coordinates: +/- 0.3, +/- 0.9
+        \foreach \x in {-0.9, -0.3, 0.3, 0.9} {
+            \foreach \y in {-0.9, -0.3, 0.3, 0.9} {
+                \filldraw[purple] (\x, \y) circle (0.04);
+            }
+        }
+        
+        % Distance annotation
+        \draw[<->, red, font=\tiny] (-0.3, 0.35) -- (0.3, 0.35) node[midway, above] {$d_{min}$};
+    \end{scope}
+
+\end{tikzpicture}
+\end{document}
