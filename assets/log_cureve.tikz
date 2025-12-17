@@ -1,0 +1,67 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        title={\textbf{Companding Characteristics}},
+        xlabel={Normalized Input Amplitude $|x|$},
+        ylabel={Normalized Output Amplitude $|y|$},
+        grid=major,
+        xmin=0, xmax=1,
+        ymin=0, ymax=1,
+        legend pos=south east,
+        width=10cm,
+        height=8cm,
+        cycle list name=color list
+    ]
+
+    % 1. Linear Reference (No Companding)
+    \addplot[
+        domain=0:1,
+        samples=10,
+        color=gray,
+        dashed,
+        thick
+    ]
+    {x};
+    \addlegendentry{Linear (No Companding)}
+
+    % 2. mu-Law (mu = 255)
+    % Formula: y = ln(1 + mu*x) / ln(1 + mu)
+    \addplot[
+        domain=0:1,
+        samples=100,
+        color=blue,
+        thick
+    ]
+    {ln(1 + 255*x) / ln(1 + 255)};
+    \addlegendentry{$\mu$-Law ($\mu=255$)}
+
+    % 3. A-Law (A = 87.6)
+    % Formula has two parts.
+    % Part 1: Linear section for 0 <= x <= 1/A
+    \addplot[
+        domain=0:0.0114155, % 1/87.6
+        samples=10,
+        color=red,
+        thick
+    ]
+    {(87.6 * x) / (1 + ln(87.6))};
+    
+    % Part 2: Logarithmic section for 1/A <= x <= 1
+    \addplot[
+        domain=0.0114155:1,
+        samples=100,
+        color=red,
+        thick
+    ]
+    {(1 + ln(87.6 * x)) / (1 + ln(87.6))};
+    \addlegendentry{A-Law ($A=87.6$)}
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}

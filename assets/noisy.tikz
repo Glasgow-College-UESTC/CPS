@@ -1,0 +1,78 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    auto,
+    >=latex,
+    thick,
+    wave/.style={
+        draw,
+        fill=white,
+        rectangle,
+        minimum height=2cm,
+        minimum width=3cm,
+        align=center
+    }
+]
+
+    % --- Define Coordinates (Vertical Layout) ---
+    % Changed from changing X (0, 6, 12) to changing Y (0, -5, -10)
+    \node (tx) at (0,0) {};
+    \node (channel) at (0,-3) {}; 
+    \node (rx) at (0,-6) {};    
+
+    % --- 1. TRANSMITTER (Clean Signal) ---
+    \node[wave] (plot1) at (tx) {
+        \begin{tikzpicture}
+            \begin{axis}[
+                width=5cm, height=3cm,
+                axis lines=none,
+                ymin=-1.2, ymax=1.2, xmin=0, xmax=6.5
+            ]
+                \addplot[domain=0:4*pi, samples=200, blue, very thick] {sin(deg(2*x))};
+            \end{axis}
+        \end{tikzpicture}
+        \\ \textbf{1. Transmitter}
+    };
+
+    % --- 2. CHANNEL (Noise Added) ---
+    \node[wave] (plot2) at (channel) {
+        \begin{tikzpicture}
+            \begin{axis}[
+                width=5cm, height=3cm,
+                axis lines=none,
+                ymin=-1.5, ymax=1.5, xmin=0, xmax=6.5
+            ]
+                \addplot[domain=0:4*pi, samples=400, red, very thick] {sin(deg(2*x)) + 0.3*rand};
+            \end{axis}
+        \end{tikzpicture}
+        \\ \textbf{2. Channel (+Noise)}
+    };
+
+    % --- 3. RECEIVER (Corrupted) ---
+    \node[wave] (plot3) at (rx) {
+        \begin{tikzpicture}
+            \begin{axis}[
+                width=5cm, height=3cm,
+                axis lines=none,
+                ymin=-2, ymax=2, xmin=0, xmax=6.5
+            ]
+                % Signal + HEAVY Random Noise + Attenuation
+                \addplot[domain=0:4*pi, samples=500, black, very thick] {0.8*sin(deg(2*x)) + 0.8*rand};
+            \end{axis}
+        \end{tikzpicture}
+        \\ \textbf{3. Receiver (Corrupted)}
+    };
+
+    % --- Arrows connecting the stages ---
+    % Changed anchors: connecting SOUTH of top node to NORTH of bottom node
+    \draw[->, ultra thick, gray] (plot1.south) -- (plot2.north);
+    \draw[->, ultra thick, gray] (plot2.south) -- (plot3.north);
+
+\end{tikzpicture}
+
+\end{document}

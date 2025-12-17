@@ -1,0 +1,92 @@
+\documentclass[tikz, border=10pt]{standalone}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta, positioning, calc}
+
+\begin{document}
+
+\begin{tikzpicture}[
+    auto,
+    node distance=1.5cm,
+    >=Stealth, % Arrow tip style
+    thick,
+    % Define styles for the components
+    block/.style = {draw, rectangle, minimum height=1.5cm, minimum width=2.2cm, align=center, thick, font=\small},
+    smallblock/.style = {draw, rectangle, minimum height=0.8cm, minimum width=1.2cm, align=center, thick},
+    sqblock/.style = {draw, rectangle, minimum height=1cm, minimum width=1cm, align=center, thick, font=\Large},
+    sum/.style = {draw, circle, inner sep=0pt, minimum size=6mm, thick},
+    osc/.style = {draw, circle, inner sep=0pt, minimum size=8mm, thick},
+    input/.style = {coordinate},
+    output/.style = {coordinate}
+]
+
+%% --- Diagram (a) --- %%
+\begin{scope}[local bounding box=scopeA]
+    % Nodes
+    \node (input_a) {$m(t)$};
+    \node [block, right=1cm of input_a] (dsb_a) {DSB-SC\\modulator};
+    \node [sum, right=3cm of dsb_a] (sum_a) {\Large $\Sigma$};
+    \node [output, right=1cm of sum_a] (out_a) {};
+    
+    % Oscillator setup vertical alignment
+    \node [osc] (osc_a) at ($(dsb_a.south) + (0,-2.5)$) {\Large $\sim$};
+    \node [smallblock] (phase_a) at ($(osc_a)!0.5!(dsb_a)$) {$\pi/2$};
+
+    % Connections
+    % Input to DSB
+    \draw[->] (input_a) -- (dsb_a);
+    
+    % DSB to Sum
+    \draw[->] (dsb_a) -- node[above] {$- Ak_p m(t) \sin \omega_c t$} (sum_a);
+    
+    % Sum to Output
+    \draw[->] (sum_a) -- node[above, near end] {NBPM} (out_a);
+    
+    % Oscillator Path (Up)
+    \draw[->] (osc_a) -- (phase_a);
+    \draw[->] (phase_a) -- node[right] {$- A \sin \omega_c t$} (dsb_a);
+    
+    % Oscillator Path (Right and Up)
+    \draw[->] (osc_a) -- node[above] {$A \cos \omega_c t$} ($(osc_a-|sum_a)$) -- (sum_a);
+    
+    % Label (a)
+    \node [below=0.5cm of osc_a] {(a)};
+\end{scope}
+
+%% --- Diagram (b) --- %%
+\begin{scope}[xshift=11cm, local bounding box=scopeB]
+    % Nodes
+    \node (input_b) {$m(t)$};
+    \node [sqblock, right=0.8cm of input_b] (int_b) {$\int$};
+    \node [block, right=1cm of int_b] (dsb_b) {DSB-SC\\modulator};
+    \node [sum, right=3cm of dsb_b] (sum_b) {\Large $\Sigma$};
+    \node [output, right=1cm of sum_b] (out_b) {};
+    
+    % Oscillator setup
+    \node [osc] (osc_b) at ($(dsb_b.south) + (0,-2.5)$) {\Large $\sim$};
+    \node [smallblock] (phase_b) at ($(osc_b)!0.5!(dsb_b)$) {$\pi/2$};
+
+    % Connections
+    % Input chain
+    \draw[->] (input_b) -- (int_b);
+    \draw[->] (int_b) -- node[above] {$a(t)$} (dsb_b);
+    
+    % DSB to Sum
+    \draw[->] (dsb_b) -- node[above] {$- Ak_f a(t) \sin \omega_c t$} (sum_b);
+    
+    % Sum to Output
+    \draw[->] (sum_b) -- node[above, near end] {NBFM} (out_b);
+    
+    % Oscillator Path (Up)
+    \draw[->] (osc_b) -- (phase_b);
+    \draw[->] (phase_b) -- node[right] {$- A \sin \omega_c t$} (dsb_b);
+    
+    % Oscillator Path (Right and Up)
+    \draw[->] (osc_b) -- node[above] {$A \cos \omega_c t$} ($(osc_b-|sum_b)$) -- (sum_b);
+    
+    % Label (b)
+    \node [below=0.5cm of osc_b] {(b)};
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}

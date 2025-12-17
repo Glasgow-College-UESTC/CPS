@@ -1,0 +1,47 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm, height=7cm,
+        xlabel={Normalized Frequency ($f \cdot T_b$)},
+        ylabel={PSD $S(f)/A^2T_b$},
+        xmin=-3.2, xmax=3.2,
+        ymin=0, ymax=1.1,
+        axis lines=middle,
+        grid=both,
+        major grid style={dotted, gray},
+        xtick={-3, -2, -1, 0, 1, 2, 3},
+        ytick={0, 0.5, 1},
+        xticklabels={$-3R_b$, $-2R_b$, $-R_b$, $0$, $R_b$, $2R_b$, $3R_b$},
+        xlabel style={at={(axis description cs:0.5,-0.1)},anchor=north},
+        ylabel style={at={(axis description cs:-0.1,0.5)},rotate=90,anchor=south},
+        samples=200,
+        thick
+    ]
+
+    % Define the sinc^2 function: (sin(pi*x)/(pi*x))^2
+    % Note: We avoid x=0 division by splitting domain or simple limit handling logic
+    % PGFPlots handles sin in degrees by default usually, so we use 180*x.
+    \addplot[
+        domain=-3.2:3.2, 
+        color=blue, 
+        ultra thick,
+        smooth
+    ] 
+    { (x == 0) ? 1 : (sin(deg(pi*x)) / (pi*x))^2 };
+
+    % Add a node pointing to the first null
+    \node[coordinate, pin={[pin edge={black, thick}, align=center]45:{First Null\\$f = R_b$}}] 
+    at (axis cs:1, 0) {};
+    
+    % Add a label for the Main Lobe
+    \node[blue, anchor=south] at (axis cs:0.5, 0.6) {Main Lobe};
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}

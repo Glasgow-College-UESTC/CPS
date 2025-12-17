@@ -1,0 +1,62 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+
+    % Styles
+    \tikzstyle{block} = [draw, rectangle, fill=blue!10, minimum height=3em, minimum width=4em, align=center]
+    \tikzstyle{mixer} = [draw, circle, fill=orange!10, minimum size=2em]
+    \tikzstyle{input} = [coordinate]
+    \tikzstyle{output} = [coordinate]
+
+    % Nodes
+    \node [input] (input) {};
+    \node [block, right=1cm of input] (nbfm) {NBFM\\Generator};
+    \node [block, right=2cm of nbfm] (mult1) {Multiplier\\$\times N_1$};
+    \node [mixer, right=2cm of mult1] (mix) {Mixer};
+    \node [block, right=2cm of mix] (mult2) {Multiplier\\$\times N_2$};
+    \node [output, right=1.5cm of mult2] (out) {};
+    
+    \node [block, below=1.5cm of mix] (lo) {LO\\$f_{LO}$};
+
+    % Connections and Labels
+    \draw [->] (input) -- node[above] {$m(t)$} (nbfm);
+    
+    % NBFM Output (Start Point)
+    \draw [->] (nbfm) -- node[align=center, midway] (start) {
+        $f_{c1}$\\
+        $\Delta f_1$
+    } (mult1);
+
+    % After First Multiplier
+    \draw [->] (mult1) -- node[align=center, midway] (stage1) {
+        $f_{c2} = ?$ \\
+        $\Delta f_2 = ?$
+    } (mix);
+
+    % Local Oscillator Input
+    \draw [->] (lo) -- (mix);
+
+    % After Mixer
+    \draw [->] (mix) -- node[align=center, midway] (stage2) {
+        $f_{c3} = ?$ \\
+        $\Delta f_3 = ?$
+    } (mult2);
+
+    % Final Output
+    \draw [->] (mult2) -- node[align=center, midway] (final) {
+        $f_{out}$\\
+        $\Delta f_{out}$
+    } (out);
+
+    % Annotations for Variables to Find
+    \node[above=0.2cm of stage1, color=red] {\textbf{Find $N_1$}};
+    \node[above=0.2cm of stage2, color=red] {\textbf{Find $f_{LO}$}};
+    \node[above=0.2cm of final, color=red] {\textbf{Find $N_2$}};
+
+\end{tikzpicture}
+
+\end{document}

@@ -4,37 +4,41 @@ title: UESTC 3018 - Communication Systems and Principles
 description: Course Slides for the CPS course
 theme: uncovered
 paginate: true
+math: katex
 transition: fade
 _paginate: false
 style: |
   .columns {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));
     gap: 1rem;
   }
-_backgroundColor: "#FFF"
+  section {
+      background-color: #FFFCEE;
+  --color-background: #FFFCEE;
+  }
+  img[alt~="center"] {
+      display: block;
+      margin: 0 auto;
+  }
+_backgroundColor: "#FFFCEE"
 _color: "#093867"
 ---
 
 ![bg 30% a decorative background](assets/UESTC%203018%203.svg)
 
-
 ---
-
-
 
 <!-- _header: ![h:5em](assets/UoG_keyline.svg) -->
 
 # UESTC 3018 - Communication Systems and Principles
 
-Lecture 11 — Angle Modulation - Zero Crossings 
+Lecture 11 — Angle Modulation and Zero Crossings
 
 Dr Hasan Abbas
-[Hasan.abbas@glasgow.ac](Hasan.Abbas@glasgow.ac.uk)s
+[Hasan.abbas@glasgow.ac.uk](Hasan.Abbas@glasgow.ac.uk)
 <!-- transition: fade -->
 <!-- <style scoped>a { color: #eee; }</style> -->
-
-<!-- This is presenter note. You can write down notes through HTML comment. -->
 
 ---
 
@@ -46,7 +50,7 @@ Dr Hasan Abbas
 - Noise adds to the amplitude
 - AM is <span style="color:red">**not**</span> resilient to noise
 - AM wave is a band limited signal
-  
+
 <!-- Need to change the QR code here -->
 ![bg right:30% 70% QR code showing menti code](assets/menti_FM.png "QR code showing menti code")
 
@@ -58,14 +62,14 @@ Dr Hasan Abbas
 
 ---
 
-# First, AM ... 🎗️
+# First, AM ... 🎗
 
 - For an AM signal, $m(t) \cos(2\pi f_c t)$
 - The envelope changes along the real axis with $m(t)$
 - Or $m(t)$ scales the carrier signal $\cos(2\pi f_c t)$
 
-![bg right:50% 100% an animated figure showing AM phasor](assets/AM_phasor.gif "an animated figure showing AM phasor")
 ![bg right:50% 100% an animated figure showing FM phasor](assets/phaser_animated.gif "an animated figure showing FM phasor")
+![bg right:50% 100% an animated figure showing AM phasor](assets/AM_phasor.gif "an animated figure showing AM phasor")
 
 ---
 
@@ -77,24 +81,9 @@ $$
 2 \cos \left(2 \pi f_c t+k m(t)\right)  = e^{j\left(2 \pi f_c t+k m(t)\right)}+e^{-j\left(2 \pi f_c t+k m(t)\right)}
 $$
 
-
-![bg right:50% 100% an animated figure showing FM phasor](assets/FM_phasor.gif "an animated figure showing FM phasor")
 ![bg right:50% 100% an animated figure showing FM phasor](assets/FM_animated.gif "an animated figure showing FM phasor")
+![bg right:50% 100% an animated figure showing FM phasor](assets/AM_phasor.gif "an animated figure showing FM phasor")
 
----
-
-# Instantaneous Frequency 😵‍💫
-
-- In high school, we learnt <span style="color:red">**speed**</span>  $v(t)$ is the time derivative of distance, $x(t)$
-- For signals, <span style="color:green">**frequency**</span>, $\omega(t)$ is the time derivative of phase, $\theta(t)$. 
-- Time derivatives describe the **instantaneous** phenomenon
-- We can vary the <span style="color:orange">*instantaneous frequency*</span> of the signal through $m(t)$
-
-![bg right:50% 100% an animated figure showing FM phasor](assets/speedometer.gif "an animated figure showing FM phasor")
-
-
-
-<!-- We need to find the slope of the signal which is the ins. frequency -->
 
 ---
 
@@ -106,7 +95,7 @@ $$
 
 # The Historical Irony: The "Bandwidth Fallacy" 🤯
 
-### FM was originally designed to SAVE space!
+### FM was originally designed to SAVE space
 
 - **The 1920s Goal:** AM radios were crowded. Engineers wanted a "Narrowband" system to squeeze more stations onto the dial.
 - **The Intuition:** "If I only wiggle the frequency by $\pm 50$ Hz, surely the bandwidth is tiny!"
@@ -118,8 +107,6 @@ $$
 
 ---
 
-
-
 # Angle Modulation 🔑
 
 - Keep the modulated wave amplitude the same
@@ -128,6 +115,16 @@ $$
 - Angle Modulation is much more complex than AM
 - A non-linear process
 
+---
+
+# Instantaneous Frequency 😵‍💫
+
+- In high school, we learnt <span style="color:red">**speed**</span>  $v(t)$ is the time derivative of distance, $x(t)$
+- For signals, <span style="color:green">**frequency**</span>, $\omega(t)$ is the time derivative of phase, $\theta(t)$.
+- Time derivatives describe the **instantaneous** phenomenon
+- We can vary the <span style="color:orange">*instantaneous frequency*</span> of the signal through $m(t)$
+
+![bg right:50% 100% an animated figure showing FM phasor](assets/speedometer.gif "an animated figure showing FM phasor")
 
 ---
 
@@ -149,7 +146,7 @@ $$
 
 ---
 
-# A Generalised Sinusoid 
+# A Generalised Sinusoid
 
 Lets look at,
 $$
@@ -157,7 +154,9 @@ $$
 $$
 
 Here $\theta(t)$ is the generalised angle that can have any value
-- For a true sinusoidal signal,  
+
+- For a true sinusoidal signal,
+
 $$
 \theta(t) = \omega_c t + \theta_0
 $$
@@ -167,19 +166,22 @@ $$
 
 ---
 
-# Finding the Instantaneous Frequency 
+# Finding the Instantaneous Frequency
 
 - The derivative of the generalised angle,
+
 $$
 \omega_i(t) = \frac{d\theta}{dt} = \theta'(t)
 $$
 
 - The other way, phase is the integral of the instantaneous frequency,
-  
+
 $$
 \theta (t) = \int_{-\infty}^{t} \omega_i(u) du = \theta_0 + \int_{0}^{t} \omega_i(u) du
 $$
+
 - We can modulate by either varying $\omega_i(t)$ or $\theta(t)$
+
 ---
 
 # Phase Modulation (PM)
@@ -216,6 +218,7 @@ $$
 $$
 
 - The phase $\theta^{FM}$ is,
+
 $$
 \theta^{FM}(t) = \int_{-\infty}^{t} \omega_i^{FM}(u) du = \omega_c t + k_f \int_{-\infty}^{t} m(u) du
 $$
@@ -226,11 +229,13 @@ $$
 $$
 
 Note the parameter $k_f$ which along with $m(t)$ determines the bandwidth
+
 - 🔑 $\theta^{FM}(t)$ to a phase modulator $\equiv$ $\omega_i^{PM}(t)$ to a frequency modulator.
 
 <!-- The integral term needs to be broken into limits from -\infty to zero which can be safely considered to be zero for a causal signal. This leaves only 0 to t limits for the integral. -->
 <!-- This also needs to be included with the fact the system is linear at least the part where the frequency varies linearly with the message signal -->
 ---
+
 # <!--fit--> <span style="color:white"> 📻 FM vs PM </span>
 
 ![bg opacity:100% decorative background](assets/gradient2.jpg)
@@ -255,7 +260,7 @@ Note the parameter $k_f$ which along with $m(t)$ determines the bandwidth
 
 ![bg right:50% 100% modulated signals animated](assets/modulation_animated.gif "modulated signals animated")
 
---- 
+---
 
 # An Example
 
@@ -274,7 +279,8 @@ Note the parameter $k_f$ which along with $m(t)$ determines the bandwidth
 ![bg right:50% 70% Menti QR code](assets/menti_FM.png "Menti QR code")
 
 ---
-# Further Reading 
+
+# Further Reading
 
 - Section 4.5 - Angle Modulation
 <span style="color:green">Modern Digital and Analog Communication Systems</span>, $5^{th}$ Edition
@@ -290,4 +296,4 @@ Note the parameter $k_f$ which along with $m(t)$ determines the bandwidth
 
 # Get in touch
 
-Hasan.Abbas@glasgow.ac.uk
+<Hasan.Abbas@glasgow.ac.uk>

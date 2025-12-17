@@ -1,0 +1,47 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[auto, node distance=3cm, >=latex']
+
+    % Define styles
+    \tikzstyle{block} = [draw, rectangle, fill=blue!5, 
+        minimum height=4em, minimum width=7em, 
+        align=center, rounded corners]
+    \tikzstyle{arrow} = [thick, ->]
+    \tikzstyle{label} = [font=\footnotesize\itshape]
+
+    % Nodes
+    \node [coordinate] (input) {};
+    
+    \node [block, right=1.5cm of input] (sampler) {
+        \textbf{Sampler} \\ 
+        \scriptsize Discretises Time \\ 
+        \scriptsize ($t \to nT_s$)
+    };
+    
+    \node [block, right=2cm of sampler] (quantizer) {
+        \textbf{Quantizer} \\ 
+        \scriptsize Discretises Amp. \\ 
+        \scriptsize ($m[n] \to \hat{m}[n]$)
+    };
+    
+    \node [block, right=2cm of quantizer] (encoder) {
+        \textbf{Encoder} \\ 
+        \scriptsize To Binary \\ 
+        \scriptsize ($L \to 010110$)
+    };
+    
+    \node [coordinate, right=2cm of encoder] (output) {};
+
+    % Connectors
+    \draw [arrow] (input) -- node[name=src, anchor=south] {Analog} node[anchor=north] {$m(t)$} (sampler);
+    \draw [arrow] (sampler) -- node[anchor=south] {Samples} node[anchor=north] {$m[n]$} (quantizer);
+    \draw [arrow] (quantizer) -- node[anchor=south] {Levels} node[anchor=north] {$\hat{m}[n]$} (encoder);
+    \draw [arrow] (encoder) -- node[anchor=south] {PCM} (output);
+
+\end{tikzpicture}
+
+\end{document}

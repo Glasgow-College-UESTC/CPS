@@ -1,0 +1,132 @@
+\documentclass[tikz,border=5pt]{standalone}
+\begin{document}
+
+\begin{tikzpicture}[x=0.8cm, y=0.8cm]
+
+  % Define the binary sequence
+  \def\sequence{1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0}
+  \def\numBits{12}
+
+  % Define vertical spacing between plots
+  \def\yspacing{2.5}
+
+  % Define a command to draw the axis
+  \newcommand{\drawaxis}{
+    \draw[->, >=latex] (0,0) -- (\numBits + 1, 0) node[right] {$t$};
+    \foreach \x in {3, 6, 9, 12} {
+      \draw (\x, 0.1) -- (\x, -0.1);
+    }
+  }
+
+  % Draw the binary sequence labels at the top
+  \foreach \bit [count=\i] in \sequence {
+    \node[above] at (\i - 0.5, 1.5) {\textbf{\bit}};
+  }
+
+  % --- (a) Unipolar RZ ---
+  \begin{scope}[yshift=0cm]
+    \drawaxis
+    \draw[thick] (0,0)
+      -- (0,1) -- (0.5,1) -- (0.5,0) -- (1,0)   % 1
+      -- (1,1) -- (1.5,1) -- (1.5,0) -- (2,0)   % 1
+      -- (2,1) -- (2.5,1) -- (2.5,0) -- (3,0)   % 1
+      -- (3,0) -- (4,0)                         % 0
+      -- (4,0) -- (5,0)                         % 0
+      -- (5,1) -- (5.5,1) -- (5.5,0) -- (6,0)   % 1
+      -- (6,0) -- (7,0)                         % 0
+      -- (7,1) -- (7.5,1) -- (7.5,0) -- (8,0)   % 1
+      -- (8,1) -- (8.5,1) -- (8.5,0) -- (9,0)   % 1
+      -- (9,0) -- (10,0)                        % 0
+      -- (10,0) -- (11,0)                       % 0
+      -- (11,0) -- (12,0);                      % 0
+    \node[below] at (\numBits/2, -0.5) {(a) Unipolar RZ};
+  \end{scope}
+
+  % --- (b) Polar RZ ---
+  \begin{scope}[yshift=-\yspacing cm]
+    \drawaxis
+    \draw[thick] (0,0)
+      -- (0,1) -- (0.5,1) -- (0.5,0) -- (1,0)     % 1
+      -- (1,1) -- (1.5,1) -- (1.5,0) -- (2,0)     % 1
+      -- (2,1) -- (2.5,1) -- (2.5,0) -- (3,0)     % 1
+      -- (3,-1) -- (3.5,-1) -- (3.5,0) -- (4,0)   % 0
+      -- (4,-1) -- (4.5,-1) -- (4.5,0) -- (5,0)   % 0
+      -- (5,1) -- (5.5,1) -- (5.5,0) -- (6,0)     % 1
+      -- (6,-1) -- (6.5,-1) -- (6.5,0) -- (7,0)   % 0
+      -- (7,1) -- (7.5,1) -- (7.5,0) -- (8,0)     % 1
+      -- (8,1) -- (8.5,1) -- (8.5,0) -- (9,0)     % 1
+      -- (9,-1) -- (9.5,-1) -- (9.5,0) -- (10,0)  % 0
+      -- (10,-1) -- (10.5,-1) -- (10.5,0) -- (11,0) % 0
+      -- (11,-1) -- (11.5,-1) -- (11.5,0) -- (12,0); % 0
+    \node[below] at (\numBits/2, -1.2) {(b) Polar RZ};
+  \end{scope}
+
+  % --- (c) AMI RZ ---
+  \begin{scope}[yshift=-2*\yspacing cm]
+    \drawaxis
+    \draw[thick] (0,0)
+      -- (0,1) -- (0.5,1) -- (0.5,0) -- (1,0)     % 1 (+)
+      -- (1,-1) -- (1.5,-1) -- (1.5,0) -- (2,0)   % 1 (-)
+      -- (2,1) -- (2.5,1) -- (2.5,0) -- (3,0)     % 1 (+)
+      -- (3,0) -- (4,0)                           % 0
+      -- (4,0) -- (5,0)                           % 0
+      -- (5,-1) -- (5.5,-1) -- (5.5,0) -- (6,0)   % 1 (-)
+      -- (6,0) -- (7,0)                           % 0
+      -- (7,1) -- (7.5,1) -- (7.5,0) -- (8,0)     % 1 (+)
+      -- (8,-1) -- (8.5,-1) -- (8.5,0) -- (9,0)   % 1 (-)
+      -- (9,0) -- (10,0)                          % 0
+      -- (10,0) -- (11,0)                         % 0
+      -- (11,0) -- (12,0);                        % 0
+    \node[below] at (\numBits/2, -1.2) {(c) Bipolar RZ};
+  \end{scope}
+
+  % --- (d) Unipolar NRZ ---
+  \begin{scope}[yshift=-3*\yspacing cm]
+    \drawaxis
+    \draw[thick] (0,0)
+      -- (0,1) -- (3,1)   % 111
+      -- (3,0) -- (5,0)   % 00
+      -- (5,1) -- (6,1)   % 1
+      -- (6,0) -- (7,0)   % 0
+      -- (7,1) -- (9,1)   % 11
+      -- (9,0) -- (12,0); % 000
+    \node[below] at (\numBits/2, -0.5) {(d) Unipolar NRZ};
+  \end{scope}
+
+  % --- (e) Polar NRZ ---
+  \begin{scope}[yshift=-4*\yspacing cm]
+    \drawaxis
+    % Start at the correct level for the first bit (which is 1)
+    \draw[thick] (0,1)
+      -- (3,1)     % 111
+      -- (3,-1) -- (5,-1) % 00
+      -- (5,1) -- (6,1)   % 1
+      -- (6,-1) -- (7,-1) % 0
+      -- (7,1) -- (9,1)   % 11
+      -- (9,-1) -- (12,-1); % 000
+    \node[below] at (\numBits/2, -1.2) {(e) Polar NRZ};
+  \end{scope}
+
+  % --- (f) Manchester (IEEE 802.3 Standard) ---
+   % 1 = Low-to-High transition in middle
+   % 0 = High-to-Low transition in middle
+  \begin{scope}[yshift=-5*\yspacing cm]
+    \drawaxis
+    \draw[thick] (0,-1) % Start Low for first '1'
+      -- (0.5,-1) -- (0.5,1) -- (1,1)     % Bit 1 (1: L->H)
+      -- (1,-1) -- (1.5,-1) -- (1.5,1) -- (2,1)     % Bit 2 (1: L->H, prep L)
+      -- (2,-1) -- (2.5,-1) -- (2.5,1) -- (3,1)     % Bit 3 (1: L->H, prep L)
+      -- (3.5,1) -- (3.5,-1) -- (4,-1)    % Bit 4 (0: H->L, already H)
+      -- (4,1) -- (4.5,1) -- (4.5,-1) -- (5,-1)     % Bit 5 (0: H->L, prep H)
+      -- (5.5,-1) -- (5.5,1) -- (6,1)     % Bit 6 (1: L->H, already L)
+      -- (6.5,1) -- (6.5,-1) -- (7,-1)    % Bit 7 (0: H->L, already H)
+      -- (7.5,-1) -- (7.5,1) -- (8,1)     % Bit 8 (1: L->H, already L)
+      -- (8,-1) -- (8.5,-1) -- (8.5,1) -- (9,1)     % Bit 9 (1: L->H, prep L)
+      -- (9.5,1) -- (9.5,-1) -- (10,-1)   % Bit 10 (0: H->L, already H)
+      -- (10,1) -- (10.5,1) -- (10.5,-1) -- (11,-1) % Bit 11 (0: H->L, prep H)
+      -- (11,1) -- (11.5,1) -- (11.5,-1) -- (12,-1);% Bit 12 (0: H->L, prep H)
+    \node[below] at (\numBits/2, -1.2) {(f) Manchester (IEEE 802.3)};
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

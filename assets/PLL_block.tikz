@@ -1,0 +1,34 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+
+\begin{document}
+
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+
+    % Define block styles
+    \tikzstyle{block} = [draw, rectangle, fill=blue!10, minimum height=3em, minimum width=4em]
+    \tikzstyle{sum} = [draw, circle, fill=blue!10, node distance=1cm]
+    \tikzstyle{input} = [coordinate]
+    \tikzstyle{output} = [coordinate]
+    \tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+    % Place the nodes
+    \node [input] (input) {};
+    \node [block, right=1.5cm of input] (pd) {Phase Detector};
+    \node [block, right=2.5cm of pd] (filter) {Loop Filter};
+    \node [output, right=2cm of filter] (out) {};
+    \node [block, below=1.5cm of filter] (vco) {VCO};
+
+    % Draw the connections
+    \draw [->] (input) -- node {$\theta_{in}(t)$} (pd);
+    \draw [->] (pd) -- node {$e(t)$} (filter);
+    \draw [->] (filter) -- node [name=y] {$v_{out}(t) \propto m(t)$} (out);
+    
+    % Feedback loop
+    \draw [->] (filter.east) -- ++(0.5,0) |- (vco.east);
+    \draw [->] (vco.west) -| node[pos=0.25] {$\theta_{out}(t)$} (pd.south);
+
+\end{tikzpicture}
+
+\end{document}

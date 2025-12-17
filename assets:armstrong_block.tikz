@@ -1,0 +1,32 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, positioning}
+\begin{document}
+\begin{tikzpicture}[auto, node distance=2.5cm,>=latex']
+    \tikzstyle{block} = [draw, rectangle, fill=green!10, minimum height=3em, minimum width=4em, align=center]
+    \tikzstyle{mixer} = [draw, circle, fill=orange!10, minimum size=2em]
+    \tikzstyle{output} = [coordinate]
+
+    % Nodes
+    \node [block] (nbfm) {NBFM\\Gen};
+    \node [block, right of=nbfm] (mult1) {$\times 64$};
+    \node [mixer, right of=mult1] (mix) {X};
+    \node [block, right of=mix] (mult2) {$\times 48$};
+    \node [output, right of=mult2] (ant) {};
+    \node [block, below=1.5cm of mix] (lo) {Crystal\\Osc};
+
+    % Text Labels (Frequencies)
+    \node [below=0.2cm of nbfm] {\tiny $f_c=200$k\\$\Delta f=25$};
+    \node [below=0.2cm of mult1] {\tiny $f=12.8$M\\$\Delta f=1.6$k};
+    \node [below=0.2cm of mix] {\tiny $f=1.9$M\\$\Delta f=1.6$k};
+    \node [below=0.2cm of mult2] {\tiny $f=91.2$M\\$\Delta f=75$k};
+
+    % Connections
+    \draw [->] (nbfm) -- (mult1);
+    \draw [->] (mult1) -- (mix);
+    \draw [->] (mix) -- (mult2);
+    \draw [->] (mult2) -- node {Antenna} (ant);
+    \draw [->] (lo) -- node [right] {$f_{LO}=10.9$M} (mix);
+
+\end{tikzpicture}
+\end{document}

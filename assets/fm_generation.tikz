@@ -1,0 +1,49 @@
+\documentclass[tikz,border=5pt]{standalone}
+\usetikzlibrary{positioning, arrows.meta, calc}
+
+\begin{document}
+\begin{tikzpicture}[
+    node distance=1.5cm and 1cm,
+    every node/.style={
+        rectangle,
+        draw=none, % No border around the text
+        align=center,
+        font=\sffamily, % Sans-serif font to match the image
+        inner sep=5pt
+    },
+    arrow_style/.style={
+        ->,
+        >={Stealth[length=3mm]},
+        thick,
+        rounded corners=2pt
+    }
+]
+
+    % Main title node
+    \node (root) [font=\sffamily\large] {Methods of FM Generation};
+
+    % Level 1 nodes
+    \node (direct) [below left=1.5cm and 0.5cm of root] {Direct methods};
+    \node (indirect) [below right=1.5cm and 0.5cm of root] {Indirect method};
+
+    % Level 2 nodes (children of Direct methods)
+    \node (reactance) [below left=1.5cm and -0.5cm of direct] {Reactance\\modulators};
+    \node (varactor) [below right=1.5cm and -0.5cm of direct] {Varactor diode\\modulator};
+
+    % Level 2 node (child of Indirect methods)
+    \node (armstrong) [below=1.5cm of indirect] {Armstrong method};
+
+    % Draw connections with orthogonal lines
+    % Connections from Root to Level 1
+    \draw[arrow_style] (root.south) -- ++(0,-0.7cm) -| (direct.north);
+    \draw[arrow_style] (root.south) -- ++(0,-0.7cm) -| (indirect.north);
+
+    % Connections from Direct methods to Level 2
+    \draw[arrow_style] (direct.south) -- ++(0,-0.7cm) -| (reactance.north);
+    \draw[arrow_style] (direct.south) -- ++(0,-0.7cm) -| (varactor.north);
+
+    % Connection from Indirect methods to Armstrong method
+    \draw[arrow_style] (indirect.south) -- (armstrong.north);
+
+\end{tikzpicture}
+\end{document}

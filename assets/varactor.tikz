@@ -1,0 +1,65 @@
+\documentclass[border=10pt]{standalone}
+\usepackage[american]{circuitikz}
+
+\begin{document}
+
+\begin{circuitikz}[scale=1.2, transform shape]
+    % Define the horizontal rails
+    % 'o-' and '-o' create the open terminals (circles) at the ends of the lines.
+    % The nodes with '\dots' add the ellipses.
+    \draw (-0.5, 3) node[left] {\dots} to[short, o-] (5.5, 3) node[right] {\dots};
+    \draw (-0.5, 0) node[left] {\dots} to[short, o-] (5.5, 0) node[right] {\dots};
+
+    % --- First Parallel Branch (Varactor and Voltage Source) ---
+    % Positioned at x=1
+    
+    % Varactor diode (Cv)
+    % Drawn from top (3) to middle (1.5).
+    % 'varactor' specifies the component symbol.
+    % 'l_=$C_v$' places the label to the left of the component.
+    % '*-' adds a connection dot at the top rail.
+    % \draw (1, 3) to[varactor, l_=$C_v$, *-] (1, 1.5);
+
+    % Replace the single varactor line with this:
+    % --- Branch 1: Manual Varactor Construction (Reversed Diode) ---
+    % 1. Draw the capacitor part downwards from the top rail
+    \draw (1, 3) to[C, *-] (1, 1.8);
+    
+    % 2. Draw the diode part upwards from the middle point to meet the capacitor.
+    %    By drawing from (1, 1.5) TO (1, 2.2), the diode points UP.
+    \draw (1, 1.5) to[D*, -] (1, 2.45);
+    
+    % 3. Manually place the label to the left since it's now two components
+    \node at (0.4, 2.25) {$C_v$};
+% Note: You might need to adjust the wire length or label position manually
+    % \node at (0.5, 2.25) {$C_v$};
+    
+    % Voltage source (m(t))
+    % Drawn from bottom (0 to middle (1.5).
+    % 'V' specifies a voltage source.
+    % 'l=$m(t)$' places the label.
+    % 'v^>=$ $' manually sets the polarity markings (+ at the top, - at the bottom).
+    % '*-' adds a connection dot at the bottom rail.
+    \draw (1, 0) to[V, l=$m(t)$, v^>=$ $, *-] (1, 1.5);
+
+
+    % --- Second Parallel Branch (Fixed Capacitor C0) ---
+    % Positioned at x=3
+    % 'C' specifies a capacitor.
+    % '*-*' adds connection dots at both the top and bottom rails.
+    \draw (3, 3) to[C, l=$C_0$, *-*] (3, 0);
+
+
+    % --- Third Parallel Branch (Inductor L0) ---
+    % Positioned at x=5
+    % 'L' specifies an inductor.
+    \draw (5, 3) to[L, l=$L_0$, *-*] (5, 0);
+
+
+    % --- Text Label ---
+    % Places the text to the right of the circuit.
+    \node at (6, 1.5) [right] {To oscillator circuit};
+
+\end{circuitikz}
+
+\end{document}

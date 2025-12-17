@@ -1,0 +1,55 @@
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{document}
+
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm, height=7cm,
+        xlabel={Normalised Frequency ($f \cdot T_b$)},
+        ylabel={PSD $S(f)/A^2T_b$},
+        xmin=-3.2, xmax=3.2,
+        ymin=0, ymax=0.9,
+        axis lines=middle,
+        grid=both,
+        major grid style={dotted, gray},
+        xtick={-3, -2, -1, 0, 1, 2, 3},
+        ytick={0, 0.4, 0.8},
+        xticklabels={$-3R_b$, $-2R_b$, $-R_b$, $0$, $R_b$, $2R_b$, $3R_b$},
+        xlabel style={at={(axis description cs:0.5,-0.1)},anchor=north},
+        ylabel style={at={(axis description cs:-0.1,0.5)},rotate=90,anchor=south},
+        samples=200,
+        thick
+    ]
+
+    % Function: Manchester PSD
+    \addplot[
+        domain=-3.2:3.2, 
+        color=red, 
+        ultra thick,
+        smooth
+    ] 
+    { (abs(x) < 0.01) ? 0 : (sin(deg(pi*x/2))^4) / (pi*x/2)^2 };
+
+    % Label: Zero DC
+    \node[coordinate, pin={[pin edge={black, thick}, align=center]135:{Zero DC\\(No Drift)}}] 
+    at (axis cs:0, 0) {};
+
+    % Label: First Null
+    \node[coordinate, pin={[pin edge={black, thick}, align=center]45:{First Null\\$f = 2R_b$}}] 
+    at (axis cs:2, 0) {};
+    
+    % Label: Main Lobe
+    \node[red, anchor=north] at (axis cs:1, 0.60) {Main Lobe};
+
+    % Optional: Mark the clock frequency component
+    % *** CORRECTION HERE: Removed 'small' ***
+    \node[circle, fill=red, inner sep=1.5pt] at (axis cs:1, 0.405) {};
+    
+    \node[red, font=\footnotesize, anchor=west] at (axis cs:1, 0.405) {Clock Energy};
+
+    \end{axis}
+\end{tikzpicture}
+
+\end{document}

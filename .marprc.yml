@@ -1,0 +1,5 @@
+# .marprc.yml
+options:
+  emoji:
+    shortcode: true
+    unicode: false

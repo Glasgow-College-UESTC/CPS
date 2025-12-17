@@ -1,0 +1,29 @@
+\documentclass[tikz,border=10pt]{standalone}
+\begin{document}
+\begin{tikzpicture}[scale=1.5]
+
+    % Axes
+    \draw[->] (-2,0) -- (2.5,0) node[right] {$t$};
+    \draw[->] (0,0) -- (0,1.5) node[above] {$V$};
+
+    % Limits T_b
+    \draw[dashed] (-0.8, 0) -- (-0.8, 1.2);
+    \draw[dashed] (0.8, 0) -- (0.8, 1.2);
+    \node[below] at (-0.8,0) {$-T_b/2$};
+    \node[below] at (0.8,0) {$T_b/2$};
+
+    % Ideal Pulse (Square)
+    \draw[blue, thick] (-0.8, 0) -- (-0.8, 1) -- (0.8, 1) -- (0.8, 0);
+    \node[blue] at (0, 1.2) {Ideal Pulse};
+
+    % Real Pulse (Smeared)
+    % Using a bell curve shape to simulate spreading
+    \draw[red, thick, domain=-2:2.2, samples=100] 
+        plot (\x, {1.0 * exp(-2*(\x)^2)});
+    
+    % Annotations
+    \draw[<->, red] (0.9, 0.2) -- (1.5, 0.2);
+    \node[red, right] at (1.5, 0.2) {Spreading (ISI)};
+
+\end{tikzpicture}
+\end{document}
